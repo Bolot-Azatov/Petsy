@@ -1,33 +1,54 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# ========================
+# OS & System files
+# ========================
+.DS_Store
+Thumbs.db
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# ========================
+# IDE files (IntelliJ, VS Code)
+# ========================
+.idea/
 *.iml
+*.iws
 *.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
 .vscode/
+
+# ========================
+# Backend (Java / Maven)
+# ========================
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/repomix-output.xml
+
+# ========================
+# Frontend (Flutter / Dart)
+# ========================
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/build/
+mobile/.pub-cache/
+mobile/.pub/
+
+# Android specific (inside Flutter)
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/gradlew
+mobile/android/gradlew.bat
+mobile/android/gradle/
+mobile/android/captures/
+mobile/android/app/release/
+
+# iOS / macOS specific
+mobile/ios/.symlinks/
+mobile/ios/Pods/
+mobile/ios/Podfile.lock
+mobile/ios/.generated/
+mobile/macos/Pods/
+
+# ========================
+# Docker local data
+# ========================
+postgres_data/
+minio_data/

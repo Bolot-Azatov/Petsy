@@ -1,0 +1,42 @@
+services:
+  # 1. PostgreSQL с поддержкой гео-расширения PostGIS
+  postgres:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: petsy_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: petsy_db
+      POSTGRES_USER: petsy_user
+      POSTGRES_PASSWORD: petsy_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 2. Локальное S3-хранилище файлов (MinIO)
+  minio:
+    image: pgsty/minio:latest
+    container_name: petsy_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: miniopassword
+    ports:
+      - "9000:9000"   # API порт (для Java)
+      - "9001:9001"   # Веб-консоль (открыть в браузере)
+    volumes:
+      - minio_data:/data
+
+  # 3. Локальный почтовый сервер (Mailpit) для перехвата OTP писем
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: petsy_mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP порт (для Spring Mail)
+      - "8025:8025"   # Веб-интерфейс писем (открыть в браузере)
+
+volumes:
+  postgres_data:
+  minio_data:

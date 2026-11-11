@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: petsy
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/petsy_db
+    username: petsy_user
+    password: petsy_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  mail:
+    host: localhost
+    port: 1025
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+# Кастомные настройки для MinIO
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: miniopassword
+  bucket-name: petsy-media
