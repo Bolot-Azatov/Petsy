@@ -1,6 +1,13 @@
 databaseChangeLog:
-  - changeSet:
-      id: 1
-      author: developer
-      changes:
-        - comment: "Initial empty changelog"
+  - include:
+      file: db/changelog/changesets/01-init-postgis.yaml
+  - include:
+      file: db/changelog/changesets/02-create-users-table.yaml
+  - include:
+      file: db/changelog/changesets/03-create-auth-and-breeds-tables.yaml
+  - include:
+      file: db/changelog/changesets/04-create-verification-requests-table.yaml
+  - include:
+      file: db/changelog/changesets/05-create-pets-and-photos-tables.yaml
+  - include:
+      file: db/changelog/changesets/06-create-sos-posts-and-photos-tables.yaml

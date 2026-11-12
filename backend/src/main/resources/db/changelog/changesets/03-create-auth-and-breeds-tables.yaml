@@ -1,0 +1,80 @@
+databaseChangeLog:
+  # 1. Таблица кодов подтверждения Email (OTP)
+  - changeSet:
+      id: 03-create-email-verification-codes-table
+      author: Bolot Azatov
+      comment: "Таблица для временных 6-значных кодов валидации email"
+      changes:
+        - createTable:
+            tableName: email_verification_codes
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(120)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            indexName: idx_email_verification_email_code
+            tableName: email_verification_codes
+            columns:
+              - column:
+                  name: email
+              - column:
+                  name: code
+
+  # 2. Таблица справочника пород (Breeds)
+  - changeSet:
+      id: 03-create-breeds-table
+      author: Bolot Azatov
+      comment: "Справочник пород кошек и собак (RU/KY)"
+      changes:
+        - createTable:
+            tableName: breeds
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: species
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name_ru
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name_ky
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            indexName: idx_breeds_species
+            tableName: breeds
+            columns:
+              - column:
+                  name: species

@@ -1,0 +1,141 @@
+databaseChangeLog:
+  # 1. Основная таблица экстренных инцидентов (SOS)
+  - changeSet:
+      id: 06-create-sos-posts-table
+      author: Bolot Azatov
+      comment: "Таблица инцидентов пропажи (LOST) и находок (FOUND) с координатами"
+      changes:
+        - createTable:
+            tableName: sos_posts
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_sos_posts_author
+                    references: users(id)
+              - column:
+                  name: pet_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_sos_posts_pet
+                    references: pets(id)
+              - column:
+                  name: post_type
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: species
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: breed_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_sos_posts_breed
+                    references: breeds(id)
+              - column:
+                  name: incident_location
+                  type: "GEOGRAPHY(Point, 4326)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address_text
+                  type: VARCHAR(255)
+              - column:
+                  name: reward_amount
+                  type: NUMERIC(10, 2)
+              - column:
+                  name: contact_phone
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: "ACTIVE"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_time
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        # Индекс по статусу (для фильтра только активных поисков)
+        - createIndex:
+            indexName: idx_sos_posts_status
+            tableName: sos_posts
+            columns:
+              - column:
+                  name: status
+
+        # Индекс по автору (для списка "Мои SOS-объявления")
+        - createIndex:
+            indexName: idx_sos_posts_author_id
+            tableName: sos_posts
+            columns:
+              - column:
+                  name: author_id
+
+  # Пространственный GiST-индекс по координатам происшествия
+  - changeSet:
+      id: 06-create-sos-posts-location-gist-index
+      author: Bolot Azatov
+      comment: "GiST индекс для поиска меток на карте и гео-рассылки пушей"
+      changes:
+        - sql:
+            sql: CREATE INDEX idx_sos_posts_location ON sos_posts USING GIST (incident_location);
+
+  # 2. Таблица фотографий к SOS-посту
+  - changeSet:
+      id: 06-create-sos-photos-table
+      author: Bolot Azatov
+      comment: "Фотографии примет животных к SOS-объявлению"
+      changes:
+        - createTable:
+            tableName: sos_photos
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: sos_post_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_sos_photos_post
+                    references: sos_posts(id)
+                    deleteCascade: true
+              - column:
+                  name: photo_url
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            indexName: idx_sos_photos_post_id
+            tableName: sos_photos
+            columns:
+              - column:
+                  name: sos_post_id

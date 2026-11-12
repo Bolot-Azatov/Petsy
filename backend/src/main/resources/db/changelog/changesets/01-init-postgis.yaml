@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-init-postgis-extension
+      author: Bolot Azatov
+      comment: "Активация расширения PostGIS для гео-расчетов"
+      changes:
+        - sql:
+            sql: CREATE EXTENSION IF NOT EXISTS postgis;
