@@ -28,4 +28,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("point") org.locationtech.jts.geom.Point point,
             @Param("distanceMeters") double distanceMeters
     );
+
 }
